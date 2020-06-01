@@ -4,11 +4,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 public class MainActivity extends AppCompatActivity {
@@ -40,6 +43,36 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+    public void btnRead(View view) {
+//        FileInputStream ips = null;
+        try {
+
+            FileInputStream ips = openFileInput(filename);
+            InputStreamReader ipr= new InputStreamReader(ips);
+
+            char[] buffer = new  char[READ_BLOCK_SIZE];
+            String str="";
+            int count;
+
+            while ((count= ipr.read(buffer))>0) {
+                String s = String.copyValueOf(buffer,0,count);
+                str += s;
+                buffer=new  char[READ_BLOCK_SIZE];
+            }
+            ipr.close();
+            Toast.makeText(this, "Read 成功了!", Toast.LENGTH_LONG).show();
+
+            TextView txvShow = (TextView)findViewById(R.id.txvShow);
+            txvShow.setText("Read 內容:\n"+str);
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
     }
 }
